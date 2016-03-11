@@ -47,7 +47,7 @@ class TestAPI(unittest.TestCase):
         session.add_all([postA, postB])
         session.commit()
 
-        response = self.client.get("/api/posts")
+        response = self.client.get("/api/posts", headers=[("Accept", "application/json")])
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/json")
@@ -71,7 +71,7 @@ class TestAPI(unittest.TestCase):
         session.add_all([postA, postB])
         session.commit()
     
-        response = self.client.get("/api/posts/{}".format(postB.id))
+        response = self.client.get("/api/posts/{}".format(postB.id), headers=[("Accept", "application/json")])
     
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.mimetype, "application/json")
@@ -83,7 +83,7 @@ class TestAPI(unittest.TestCase):
 
     def test_get_non_existent_post(self):
         """ Getting a single post which doesn't exist """
-        response = self.client.get("/api/posts/1")
+        response = self.client.get("/api/posts/1", headers=[("Accept", "application/json")])
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.mimetype, "application/json")
@@ -151,7 +151,7 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(response.mimetype, "application/json")
 
         posts = json.loads(response.data.decode("ascii"))
-        self.assertEqual(len(posts), 3)
+        self.assertEqual(len(posts), 1)
 
         post = posts[0]
         self.assertEqual(post["title"], "Post with whistles")
